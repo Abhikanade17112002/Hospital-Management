@@ -1,15 +1,11 @@
 package com.hospitalmanagement.entities;
 
 
+import com.hospitalmanagement.enums.BloodGroup;
 import com.hospitalmanagement.enums.Gender;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.validation.annotation.Validated;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -38,12 +34,8 @@ public class Patient {
     @Id
     @GeneratedValue( strategy = GenerationType.UUID)
     private String patientId ;
-
-
     private String firstName ;
-
     private String lastName ;
-
     @Column(unique = true)
     private String emailId ;
     private LocalDate dateOfBirth ;
@@ -52,13 +44,18 @@ public class Patient {
     @CreationTimestamp
     @Column( updatable = false )
     private LocalDateTime createdAt ;
+    @Column(nullable = false)
+    private BloodGroup bloodGroup ;
     @UpdateTimestamp
     private LocalDateTime updatedAt ;
+    @OneToOne
+    @JoinColumn( name = "insurance_id")
+    private Insurance insurance ;
 
     public Patient() {
     }
 
-    public Patient(String patientId, String firstName, String lastName, String emailId, LocalDate dateOfBirth, Gender gender, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Patient(Insurance insurance,String patientId, String firstName, String lastName, String emailId, LocalDate dateOfBirth, Gender gender, LocalDateTime createdAt, BloodGroup bloodGroup, LocalDateTime updatedAt) {
         this.patientId = patientId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -66,9 +63,18 @@ public class Patient {
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.createdAt = createdAt;
+        this.bloodGroup = bloodGroup;
         this.updatedAt = updatedAt;
+        this.insurance = insurance ;
     }
 
+    public Insurance getInsurance() {
+        return insurance;
+    }
+
+    public void setInsurance(Insurance insurance) {
+        this.insurance = insurance;
+    }
 
     public String getPatientId() {
         return patientId;
@@ -126,6 +132,14 @@ public class Patient {
         this.createdAt = createdAt;
     }
 
+    public BloodGroup getBloodGroup() {
+        return bloodGroup;
+    }
+
+    public void setBloodGroup(BloodGroup bloodGroup) {
+        this.bloodGroup = bloodGroup;
+    }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
@@ -144,7 +158,9 @@ public class Patient {
                 ", dateOfBirth=" + dateOfBirth +
                 ", gender=" + gender +
                 ", createdAt=" + createdAt +
+                ", bloodGroup=" + bloodGroup +
                 ", updatedAt=" + updatedAt +
+                ", insurance=" + insurance +
                 '}';
     }
 }

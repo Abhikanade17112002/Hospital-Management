@@ -1,11 +1,9 @@
 package com.hospitalmanagement.dtos.patientdtos;
-
+import com.hospitalmanagement.enums.BloodGroup;
 import com.hospitalmanagement.enums.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class AddPatientRequestDTO {
 
@@ -23,15 +21,18 @@ public class AddPatientRequestDTO {
 
     private Gender gender ;
 
+    private BloodGroup bloodGroup ;
+
     public AddPatientRequestDTO() {
     }
 
-    public AddPatientRequestDTO(String firstName, String lastName, String emailId, LocalDate dateOfBirth, Gender gender) {
+    public AddPatientRequestDTO(String firstName, String lastName, String emailId, LocalDate dateOfBirth, Gender gender, BloodGroup bloodGroup) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+        this.bloodGroup = bloodGroup;
     }
 
     public String getFirstName() {
@@ -74,6 +75,14 @@ public class AddPatientRequestDTO {
         this.gender = gender;
     }
 
+    public BloodGroup getBloodGroup() {
+        return bloodGroup;
+    }
+
+    public void setBloodGroup(BloodGroup bloodGroup) {
+        this.bloodGroup = bloodGroup;
+    }
+
     @Override
     public String toString() {
         return "AddPatientRequestDTO{" +
@@ -82,6 +91,7 @@ public class AddPatientRequestDTO {
                 ", emailId='" + emailId + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", gender=" + gender +
+                ", bloodGroup=" + bloodGroup +
                 '}';
     }
 }

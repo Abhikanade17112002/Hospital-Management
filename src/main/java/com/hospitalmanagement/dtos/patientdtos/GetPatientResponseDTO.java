@@ -1,5 +1,6 @@
 package com.hospitalmanagement.dtos.patientdtos;
 
+import com.hospitalmanagement.enums.BloodGroup;
 import com.hospitalmanagement.enums.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -28,10 +29,12 @@ public class GetPatientResponseDTO {
 
     private LocalDateTime updatedAt ;
 
+    private BloodGroup bloodGroup ;
+
     public GetPatientResponseDTO() {
     }
 
-    public GetPatientResponseDTO(String patientId, String firstName, String lastName, String emailId, LocalDate dateOfBirth, Gender gender, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public GetPatientResponseDTO(String patientId, String firstName, String lastName, String emailId, LocalDate dateOfBirth, Gender gender, LocalDateTime createdAt, LocalDateTime updatedAt, BloodGroup bloodGroup) {
         this.patientId = patientId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -40,8 +43,8 @@ public class GetPatientResponseDTO {
         this.gender = gender;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.bloodGroup = bloodGroup;
     }
-
 
     public String getPatientId() {
         return patientId;
@@ -103,8 +106,17 @@ public class GetPatientResponseDTO {
         return updatedAt;
     }
 
+
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public BloodGroup getBloodGroup() {
+        return bloodGroup;
+    }
+
+    public void setBloodGroup(BloodGroup bloodGroup) {
+        this.bloodGroup = bloodGroup;
     }
 
     @Override
@@ -118,6 +130,8 @@ public class GetPatientResponseDTO {
                 ", gender=" + gender +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", bloodGroup=" + bloodGroup +
                 '}';
     }
+
 }
