@@ -8,6 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "patient")
 @Table(
@@ -48,9 +50,16 @@ public class Patient {
     private BloodGroup bloodGroup ;
     @UpdateTimestamp
     private LocalDateTime updatedAt ;
-    @OneToOne
+
+    // Owning Side
+    @OneToOne( cascade = CascadeType.ALL)
     @JoinColumn( name = "insurance_id")
     private Insurance insurance ;
+
+
+    // Inverse Side
+    @OneToMany(mappedBy = "patient" , cascade = CascadeType.ALL)
+    private List<Appointment> appointments = new ArrayList<>() ;
 
     public Patient() {
     }
@@ -146,6 +155,14 @@ public class Patient {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 
     @Override

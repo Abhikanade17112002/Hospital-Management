@@ -1,6 +1,7 @@
 package com.hospitalmanagement.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -23,18 +24,18 @@ public class Insurance {
     @Column( nullable = false , updatable = false)
     private LocalDateTime createdAt ;
 
+    // Bidirectional Mapping  ( Inverse Side )
     @OneToOne( mappedBy = "insurance")
+    @JsonIgnore
     private Patient patient ;
 
     public Insurance() {
     }
 
-    public Insurance(String insuranceId, String policyNumber, String provider, LocalDateTime createdAt, Patient patient) {
-        this.insuranceId = insuranceId;
+    public Insurance( String policyNumber, String provider) {
         this.policyNumber = policyNumber;
         this.provider = provider;
-        this.createdAt = createdAt;
-        this.patient = patient;
+
     }
 
     public String getInsuranceId() {

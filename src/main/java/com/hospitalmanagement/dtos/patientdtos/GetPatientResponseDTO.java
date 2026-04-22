@@ -1,5 +1,6 @@
 package com.hospitalmanagement.dtos.patientdtos;
 
+import com.hospitalmanagement.entities.Insurance;
 import com.hospitalmanagement.enums.BloodGroup;
 import com.hospitalmanagement.enums.Gender;
 import jakarta.persistence.*;
@@ -31,10 +32,12 @@ public class GetPatientResponseDTO {
 
     private BloodGroup bloodGroup ;
 
+    private Insurance insurance ;
+
     public GetPatientResponseDTO() {
     }
 
-    public GetPatientResponseDTO(String patientId, String firstName, String lastName, String emailId, LocalDate dateOfBirth, Gender gender, LocalDateTime createdAt, LocalDateTime updatedAt, BloodGroup bloodGroup) {
+    public GetPatientResponseDTO(String patientId, String firstName, String lastName, String emailId, LocalDate dateOfBirth, Gender gender, LocalDateTime createdAt, LocalDateTime updatedAt, BloodGroup bloodGroup, Insurance insurance) {
         this.patientId = patientId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -44,6 +47,15 @@ public class GetPatientResponseDTO {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.bloodGroup = bloodGroup;
+        this.insurance = insurance;
+    }
+
+    public Insurance getInsurance() {
+        return insurance;
+    }
+
+    public void setInsurance(Insurance insurance) {
+        this.insurance = insurance;
     }
 
     public String getPatientId() {
@@ -131,7 +143,7 @@ public class GetPatientResponseDTO {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", bloodGroup=" + bloodGroup +
+                ", insurance=" + insurance +
                 '}';
     }
-
 }
