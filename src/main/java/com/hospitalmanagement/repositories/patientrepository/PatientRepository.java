@@ -47,8 +47,9 @@ public interface PatientRepository extends JpaRepository<Patient,String> {
 
     // N+1 Query
 
-//    @Query("SELECT P FROM patient P LEFT JOIN FETCH P.appointments a LEFT JOIN FETCH a.doctor")
-@Query("SELECT P FROM patient P LEFT JOIN FETCH P.appointments")
+    @Query("SELECT P FROM patient P LEFT JOIN FETCH P.appointments a LEFT JOIN FETCH a.doctor")
+//@Query("SELECT P FROM patient P LEFT JOIN FETCH P.appointments LEFT JOIN FETCH P.insurance")
+//@Query("SELECT P FROM patient P LEFT JOIN FETCH P.appointments")
     List<Patient> getAllPatientsWithThereAppointments() ;
 
 

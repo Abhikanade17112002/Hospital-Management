@@ -41,8 +41,8 @@ public class PatientServiceImp implements PatientService {
 
     @Override
     public List<GetPatientResponseDTO> getRegisteredPatients() {
-//        List<Patient> retrivedPatients = patientRepository.findAll();
-        List<Patient> retrivedPatients = patientRepository.getAllPatientsWithThereAppointments();
+        List<Patient> retrivedPatients = patientRepository.findAll();
+        //List<Patient> retrivedPatients = patientRepository.getAllPatientsWithThereAppointments();
         List<GetPatientResponseDTO> response = new ArrayList<>();
         for (Patient patient : retrivedPatients) {
             response.add(
