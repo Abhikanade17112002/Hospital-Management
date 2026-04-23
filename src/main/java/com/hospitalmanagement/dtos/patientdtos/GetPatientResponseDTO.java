@@ -1,5 +1,6 @@
 package com.hospitalmanagement.dtos.patientdtos;
 
+import com.hospitalmanagement.entities.Appointment;
 import com.hospitalmanagement.entities.Insurance;
 import com.hospitalmanagement.enums.BloodGroup;
 import com.hospitalmanagement.enums.Gender;
@@ -11,6 +12,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GetPatientResponseDTO {
 
@@ -34,10 +37,12 @@ public class GetPatientResponseDTO {
 
     private Insurance insurance ;
 
+    private List<Appointment> appointments = new ArrayList<>() ;
+
     public GetPatientResponseDTO() {
     }
 
-    public GetPatientResponseDTO(String patientId, String firstName, String lastName, String emailId, LocalDate dateOfBirth, Gender gender, LocalDateTime createdAt, LocalDateTime updatedAt, BloodGroup bloodGroup, Insurance insurance) {
+    public GetPatientResponseDTO(String patientId, String firstName, String lastName, String emailId, LocalDate dateOfBirth, Gender gender, LocalDateTime createdAt, LocalDateTime updatedAt, BloodGroup bloodGroup, Insurance insurance, List<Appointment> appointments) {
         this.patientId = patientId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -48,6 +53,15 @@ public class GetPatientResponseDTO {
         this.updatedAt = updatedAt;
         this.bloodGroup = bloodGroup;
         this.insurance = insurance;
+        this.appointments = appointments;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 
     public Insurance getInsurance() {
@@ -144,6 +158,7 @@ public class GetPatientResponseDTO {
                 ", updatedAt=" + updatedAt +
                 ", bloodGroup=" + bloodGroup +
                 ", insurance=" + insurance +
+                ", appointments=" + appointments +
                 '}';
     }
 }

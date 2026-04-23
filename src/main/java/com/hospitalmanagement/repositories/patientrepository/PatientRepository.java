@@ -45,6 +45,13 @@ public interface PatientRepository extends JpaRepository<Patient,String> {
     Page<Patient> getPaginatedPatients(Pageable page) ;
 
 
+    // N+1 Query
+
+//    @Query("SELECT P FROM patient P LEFT JOIN FETCH P.appointments a LEFT JOIN FETCH a.doctor")
+@Query("SELECT P FROM patient P LEFT JOIN FETCH P.appointments")
+    List<Patient> getAllPatientsWithThereAppointments() ;
+
+
 // Projection
 
 //    @Query("SELECT new com.hospitalmanagement.dtos.PatientNameDTO(p.firstName, p.lastName) FROM patient p WHERE p.dateOfBirth > :birthDate")

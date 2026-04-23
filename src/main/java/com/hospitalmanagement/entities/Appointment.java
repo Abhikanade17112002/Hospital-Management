@@ -23,7 +23,7 @@ public class Appointment {
 
 
     @JoinColumn( name = "doctor_name" , nullable = false)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Doctor doctor ;
 
