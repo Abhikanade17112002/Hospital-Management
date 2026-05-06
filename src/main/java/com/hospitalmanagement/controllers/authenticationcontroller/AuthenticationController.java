@@ -7,7 +7,9 @@ import com.hospitalmanagement.dtos.userdtos.UserSignUpRequestDTO;
 import com.hospitalmanagement.dtos.userdtos.UserSignUpResponseDTO;
 import com.hospitalmanagement.services.userservice.impl.UserServiceImpl;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +24,19 @@ public class AuthenticationController {
 
     @PostMapping("/user/signin")
     public ResponseEntity<UserSignInResponseDTO> userSignIn(@RequestBody @Valid UserSignInRequestDTO userSignInRequest){
+        UserSignInResponseDTO response = userService.userSignIn(userSignInRequest);
+        ResponseCookie cookie = ResponseCookie.from("token", response.getJwtToken())
+                .httpOnly(true)      // JS cannot access (security)
+                .secure(false)        // only HTTPS (set false for localhost)
+                .path("/")
+                .maxAge(60 * 5)     // 5 Min
+                .sameSite("Strict")  // CSRF protection
+                .build();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(userService.userSignIn(userSignInRequest));
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(response);
 
     }
 
@@ -36,6 +47,23 @@ public class AuthenticationController {
                 .status(HttpStatus.OK)
                 .body(userService.userSignUp(userSignUpRequest));
 
+
+    }
+
+    @PostMapping("/user/signout")
+    public ResponseEntity<String> userSignOut(){
+        ResponseCookie cookie = ResponseCookie.from("token", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("Logged out successfully");
     }
 
 }

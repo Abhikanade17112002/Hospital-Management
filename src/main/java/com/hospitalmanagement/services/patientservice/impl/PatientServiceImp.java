@@ -5,6 +5,8 @@ import com.hospitalmanagement.dtos.patientdtos.GetPatientResponseDTO;
 import com.hospitalmanagement.dtos.patientdtos.PatientsBornAfterRequestDTO;
 import com.hospitalmanagement.dtos.patientdtos.PatientsDOBRequestDTO;
 import com.hospitalmanagement.entities.Patient;
+import com.hospitalmanagement.entities.User;
+import com.hospitalmanagement.repositories.UserRepository;
 import com.hospitalmanagement.repositories.patientrepository.PatientRepository;
 import com.hospitalmanagement.services.patientservice.PatientService;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,17 +21,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientServiceImp implements PatientService {
 
     private final PatientRepository patientRepository;
-
     private final ModelMapper modelMapper;
+    private final UserRepository userRepository ;
 
-    public PatientServiceImp(PatientRepository patientRepository, ModelMapper modelMapper) {
+    public PatientServiceImp(PatientRepository patientRepository, ModelMapper modelMapper, UserRepository userRepository) {
         this.patientRepository = patientRepository;
         this.modelMapper = modelMapper;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -42,14 +46,7 @@ public class PatientServiceImp implements PatientService {
     @Override
     public List<GetPatientResponseDTO> getRegisteredPatients() {
         List<Patient> retrivedPatients = patientRepository.findAll();
-        //List<Patient> retrivedPatients = patientRepository.getAllPatientsWithThereAppointments();
-        List<GetPatientResponseDTO> response = new ArrayList<>();
-        for (Patient patient : retrivedPatients) {
-            response.add(
-                    modelMapper.map(patient, GetPatientResponseDTO.class)
-            );
-        }
-
+        List<GetPatientResponseDTO> response = retrivedPatients.stream().map((patient)-> modelMapper.map(patient, GetPatientResponseDTO.class)).collect(Collectors.toList());
         return response;
     }
 
@@ -128,5 +125,14 @@ public class PatientServiceImp implements PatientService {
        }
 
        return response;
+    }
+
+    @Override
+    public String deleteRegisteredPatientById(String patientId) {
+        Patient retrivedPatient = patientRepository.findById(patientId).orElseThrow(()-> new EntityNotFoundException("Patient With Patient Id ==>" + patientId + " Not Found"));
+        User user = retrivedPatient.getUser() ;
+        patientRepository.delete(retrivedPatient);
+        userRepository.delete(user);
+        return "Patient With Patient Id ==>" + patientId + " Deleted Successfully";
     }
 }

@@ -1,44 +1,25 @@
-package com.hospitalmanagement.entities;
+package com.hospitalmanagement.dtos.appointmentdtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-
+import com.hospitalmanagement.entities.Doctor;
+import com.hospitalmanagement.entities.Patient;
 import java.time.LocalDateTime;
 
-@Entity
-public class Appointment {
-    @Id
-    @GeneratedValue( strategy = GenerationType.UUID)
+public class GetAppointmentResponseDTO {
     private String appointmentId ;
-
-    @Column(nullable = false)
     private LocalDateTime appointmentTime ;
-
     private String reason;
-
-    @JoinColumn( name = "patient_id", nullable = false)
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
     private Patient patient ;
-
-
-    @JoinColumn( name = "doctor_name" , nullable = false)
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
     private Doctor doctor ;
 
-    public Appointment() {
+    public GetAppointmentResponseDTO() {
     }
 
-    public Appointment(String appointmentId, LocalDateTime appointmentTime, String reason, Patient patient) {
+    public GetAppointmentResponseDTO(String appointmentId, LocalDateTime appointmentTime, String reason, Patient patient, Doctor doctor) {
         this.appointmentId = appointmentId;
         this.appointmentTime = appointmentTime;
         this.reason = reason;
         this.patient = patient;
-    }
-
-    public Appointment(String appointmentId) {
-        this.appointmentId = appointmentId;
+        this.doctor = doctor;
     }
 
     public String getAppointmentId() {
@@ -83,7 +64,7 @@ public class Appointment {
 
     @Override
     public String toString() {
-        return "Appointment{" +
+        return "GetAppointmentResponseDTO{" +
                 "appointmentId='" + appointmentId + '\'' +
                 ", appointmentTime=" + appointmentTime +
                 ", reason='" + reason + '\'' +

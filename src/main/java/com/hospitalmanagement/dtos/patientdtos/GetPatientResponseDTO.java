@@ -1,75 +1,44 @@
 package com.hospitalmanagement.dtos.patientdtos;
 
+
 import com.hospitalmanagement.entities.Appointment;
 import com.hospitalmanagement.entities.Insurance;
+import com.hospitalmanagement.entities.User;
 import com.hospitalmanagement.enums.BloodGroup;
 import com.hospitalmanagement.enums.Gender;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GetPatientResponseDTO {
-
     private String patientId ;
-
     private String firstName ;
-
     private String lastName ;
-
-    private String emailId ;
-
     private LocalDate dateOfBirth ;
-
     private Gender gender ;
-
     private LocalDateTime createdAt ;
-
-    private LocalDateTime updatedAt ;
-
     private BloodGroup bloodGroup ;
-
+    private LocalDateTime updatedAt ;
     private Insurance insurance ;
-
     private List<Appointment> appointments = new ArrayList<>() ;
+    private User user ;
 
-    public GetPatientResponseDTO() {
-    }
-
-    public GetPatientResponseDTO(String patientId, String firstName, String lastName, String emailId, LocalDate dateOfBirth, Gender gender, LocalDateTime createdAt, LocalDateTime updatedAt, BloodGroup bloodGroup, Insurance insurance, List<Appointment> appointments) {
+    public GetPatientResponseDTO(String patientId, String firstName, String lastName, LocalDate dateOfBirth, Gender gender, LocalDateTime createdAt, BloodGroup bloodGroup, LocalDateTime updatedAt, Insurance insurance, List<Appointment> appointments, User user) {
         this.patientId = patientId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.emailId = emailId;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
         this.bloodGroup = bloodGroup;
+        this.updatedAt = updatedAt;
         this.insurance = insurance;
         this.appointments = appointments;
+        this.user = user;
     }
 
-    public List<Appointment> getAppointments() {
-        return appointments;
-    }
-
-    public void setAppointments(List<Appointment> appointments) {
-        this.appointments = appointments;
-    }
-
-    public Insurance getInsurance() {
-        return insurance;
-    }
-
-    public void setInsurance(Insurance insurance) {
-        this.insurance = insurance;
+    public GetPatientResponseDTO() {
     }
 
     public String getPatientId() {
@@ -96,14 +65,6 @@ public class GetPatientResponseDTO {
         this.lastName = lastName;
     }
 
-    public String getEmailId() {
-        return emailId;
-    }
-
-    public void setEmailId(String emailId) {
-        this.emailId = emailId;
-    }
-
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
@@ -128,15 +89,6 @@ public class GetPatientResponseDTO {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public BloodGroup getBloodGroup() {
         return bloodGroup;
     }
@@ -145,20 +97,52 @@ public class GetPatientResponseDTO {
         this.bloodGroup = bloodGroup;
     }
 
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Insurance getInsurance() {
+        return insurance;
+    }
+
+    public void setInsurance(Insurance insurance) {
+        this.insurance = insurance;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "GetPatientResponseDTO{" +
                 "patientId='" + patientId + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", emailId='" + emailId + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", gender=" + gender +
                 ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
                 ", bloodGroup=" + bloodGroup +
+                ", updatedAt=" + updatedAt +
                 ", insurance=" + insurance +
                 ", appointments=" + appointments +
+                ", user=" + user +
                 '}';
     }
 }

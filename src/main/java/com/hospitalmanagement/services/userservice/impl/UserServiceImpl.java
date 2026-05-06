@@ -1,15 +1,24 @@
 package com.hospitalmanagement.services.userservice.impl;
 
-import com.hospitalmanagement.dtos.userdtos.UserSignInRequestDTO;
-import com.hospitalmanagement.dtos.userdtos.UserSignInResponseDTO;
-import com.hospitalmanagement.dtos.userdtos.UserSignUpRequestDTO;
-import com.hospitalmanagement.dtos.userdtos.UserSignUpResponseDTO;
+import com.hospitalmanagement.dtos.doctordtos.GetDoctorResponseDTO;
+import com.hospitalmanagement.dtos.patientdtos.GetPatientResponseDTO;
+import com.hospitalmanagement.dtos.userdtos.*;
+import com.hospitalmanagement.entities.Doctor;
+import com.hospitalmanagement.entities.Patient;
+import com.hospitalmanagement.entities.Role;
 import com.hospitalmanagement.entities.User;
 import com.hospitalmanagement.enums.OAuthProviderType;
+import com.hospitalmanagement.enums.RoleType;
+import com.hospitalmanagement.repositories.DoctorRepository;
+import com.hospitalmanagement.repositories.RoleRepository;
 import com.hospitalmanagement.repositories.UserRepository;
+import com.hospitalmanagement.repositories.patientrepository.PatientRepository;
 import com.hospitalmanagement.services.userservice.UserService;
 import com.hospitalmanagement.utility.JWTUtility;
 import com.hospitalmanagement.utility.OAuthUtility;
+import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +30,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -31,12 +43,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder ;
     private final JWTUtility jwtUtility ;
     private final AuthenticationManager authenticationManager ;
+    private final ModelMapper modelMapper ;
+    private final RoleRepository roleRepository ;
+    private final PatientRepository patientRepository ;
+    private final DoctorRepository doctorRepository ;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTUtility jwtUtility, AuthenticationManager authenticationManager) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTUtility jwtUtility, @Lazy AuthenticationManager authenticationManager, ModelMapper modelMapper, RoleRepository roleRepository, PatientRepository patientRepository, DoctorRepository doctorRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtility = jwtUtility;
         this.authenticationManager = authenticationManager;
+        this.modelMapper = modelMapper;
+        this.roleRepository = roleRepository;
+        this.patientRepository = patientRepository;
+        this.doctorRepository = doctorRepository;
     }
 
     @Override
@@ -67,69 +87,113 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserSignInResponseDTO handleOAuth2UserLogIn(OAuth2User user, String authorizedClientRegistrationId) {
-
-        // Step 1 Identify Provider Type And ID
-
+        String fName = OAuthUtility.getFirstName(user,authorizedClientRegistrationId);
+        String lName = OAuthUtility.getLastName(user,authorizedClientRegistrationId);
+        String providerId = OAuthUtility.getProviderId(user,authorizedClientRegistrationId);
+        String emailId = OAuthUtility.getUserEmail(user,authorizedClientRegistrationId);
         OAuthProviderType providerType = OAuthUtility.getProviderType(authorizedClientRegistrationId);
-        String providerId = OAuthUtility.getProviderId(user,authorizedClientRegistrationId) ;
+        Optional<User> existingUser =  userRepository.findByOAuthProvideIdAndOAuthProviderTypeAndEmailId(providerId,providerType,emailId) ;
+        User savedUser = null ;
+        Role role = roleRepository.findByRoleType(RoleType.ROLE_USER) ;
+
+        if( existingUser.isEmpty() ){
+            User newUser = new User() ;
+            newUser.setActive(true);
+            newUser.setUserName(fName +lName + Math.round(Math.random()*9999 + 1));
+            newUser.setRoles(List.of(role));
+            newUser.setEmailId(emailId);
+            newUser.setoAuthProvideId(providerId);
+            newUser.setoAuthProviderType(providerType);
+            savedUser = userRepository.save(newUser);
 
 
-        System.out.println("providerType , providerId" + providerType + " " + providerId);
 
-        User savedUser = (User) userRepository.findByOAuthProvideIdAndOAuthProviderType(providerId,providerType).orElse(null);
-        String userEmailId = OAuthUtility.getUserEmail(user,authorizedClientRegistrationId);
-
-        System.out.printf("retrivedUser , userEmailId ==>  %s %s \n" , savedUser,userEmailId);
-
-
-        if( savedUser == null && userEmailId != null ){ // This Means No User
-
-            String fName = OAuthUtility.getFirstName(user,authorizedClientRegistrationId);
-            String lName = OAuthUtility.getFirstName(user,authorizedClientRegistrationId);
-            savedUser = userSignUpForOAuth( fName,lName,userEmailId,providerId,providerType);
-        } else if ( savedUser != null && !savedUser.getEmailId().equalsIgnoreCase(userEmailId)) {
-            savedUser.setEmailId(userEmailId);
-            savedUser = userRepository.save(savedUser);
         }
-        else if ( userEmailId != null ){
-            throw new BadCredentialsException("User With " + userEmailId + " Already Exists ") ;
+        else if( userRepository.findByEmailId(emailId).isPresent() ){
+            System.out.println("User With Email Id ==> " + emailId + " Already Exists ") ;
+            savedUser = userRepository.findByEmailId(emailId).orElseThrow(()-> new EntityNotFoundException()) ;
         }
 
-        UserSignInResponseDTO res = new UserSignInResponseDTO(jwtUtility.generateToken(savedUser),savedUser.getUserId()) ;
-        return res;
-    }
-
-    public UserSignUpResponseDTO userSignUp(UserSignUpRequestDTO userSignUpRequest){
-        User newUser = new User(
-                null ,
-                userSignUpRequest.getFirstName(),
-                userSignUpRequest.getLastName(),
-                userSignUpRequest.getEmailId(),
-                passwordEncoder.encode(userSignUpRequest.getPassword()),
-                null,
-                null,
-                userSignUpRequest.getGender(),
-                userSignUpRequest.getDateOfBirth(),
-                userSignUpRequest.getBloodGroup()
-                ) ;
-        User savedUser = userRepository.save(newUser);
-
-        UserSignUpResponseDTO response = new UserSignUpResponseDTO(
-                savedUser.getUserId(),
-                savedUser.getUsername()
-        );
-
+        UserSignInResponseDTO response = new UserSignInResponseDTO() ;
+        response.setUserId(savedUser.getUserId());
+        response.setJwtToken(jwtUtility.generateToken(savedUser));
         return response ;
     }
 
-    public User userSignUpForOAuth(String firstName , String lastName , String emailId,String providerId,OAuthProviderType providerType){
+    @Override
+    public UserSignUpResponseDTO userSignUp(UserSignUpRequestDTO userSignUpRequest) {
+        Role role = roleRepository.findByRoleType(RoleType.ROLE_USER) ;
         User newUser = new User() ;
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
-        newUser.setEmailId(emailId);
-        newUser.setUserName(firstName+lastName+"@"+String.valueOf((Math.random()*99999 + 1)));
-        newUser.setoAuthProviderType(providerType);
-        newUser.setoAuthProvideId(providerId);
-        return userRepository.save(newUser);
+        newUser.setActive(true);
+        newUser.setUserName(userSignUpRequest.getUserName());
+        newUser.setRoles(List.of(role));
+        newUser.setPassword(passwordEncoder.encode( userSignUpRequest.getPassword() ) );
+        newUser.setEmailId(userSignUpRequest.getEmailId());
+        newUser.setoAuthProviderType(OAuthProviderType.EMAIL_ID);
+        newUser.setoAuthProvideId("Email_Id");
+        User savedUser = userRepository.save(newUser);
+        return modelMapper.map(savedUser,UserSignUpResponseDTO.class);
     }
+
+    @Override
+    public List<UserResponseDTO> getAllRegisteredUser() {
+        return userRepository.findAll().stream()
+                .map((user)->modelMapper.map(user, UserResponseDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public AssignRoleResponseDTO assignRole(AssignRoleRequestDTO assignRoleRequestDTO) {
+        User retrivedUser = userRepository.findById(assignRoleRequestDTO.getUserId()).orElseThrow(()-> new EntityNotFoundException("User With Id ==> " + assignRoleRequestDTO.getUserId() + " Not Found")) ;
+        List<Role> roles = new ArrayList<>() ;
+        for(RoleType role : assignRoleRequestDTO.getRoleTypes()){
+          Role retrivedRole =  roleRepository.findByRoleType(role);
+          roles.add(retrivedRole) ;
+        }
+        retrivedUser.getRoles().addAll(roles);
+        User savedUser = userRepository.save(retrivedUser);
+        return modelMapper.map(savedUser, AssignRoleResponseDTO.class);
+    }
+
+    @Override
+    public UserResponseDTO getRegisteredUser(String userId) {
+        User retrivedUser = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User With Id ==> " + userId + " Not Found "));
+        return modelMapper.map(retrivedUser,UserResponseDTO.class);
+    }
+
+    @Override
+    public Boolean deleteUserById(String userId) {
+        if( patientRepository.existsById(userId) ){
+            patientRepository.deleteById(userId);
+        }
+        if( doctorRepository.existsById(userId) ){
+            doctorRepository.deleteById(userId);
+        }
+        if( userRepository.existsById(userId)){
+            userRepository.deleteById(userId);
+        }
+        else {
+            throw new EntityNotFoundException("User With User Id ==> " + userId + " Not Found " );
+        }
+        return true;
+    }
+
+    @Override
+    public String toggleUserStatus(String userId) {
+            User retrivedUser = userRepository.findById(userId).orElseThrow(()->new EntityNotFoundException("User With User Id ==> " + userId + " Not Found " ));
+            retrivedUser.setActive(!retrivedUser.isActive());
+            userRepository.save(retrivedUser);
+            return "Toggled Profile Status Of User With Id " + userId + " Succesfully ";
+    }
+
+    @Override
+    public GetPatientResponseDTO onBoardPatientByUserId(String userId) {
+        User retrivedUser = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User With User Id ==> " + userId + " Not Found"));
+        Role patientRole = roleRepository.findByRoleType(RoleType.ROLE_PATIENT) ;
+        retrivedUser.getRoles().add(patientRole);
+        Patient patient = new Patient() ;
+        patient.setUser(retrivedUser);
+        patientRepository.save(patient);
+        return modelMapper.map(patient, GetPatientResponseDTO.class) ;
+    }
+
 }

@@ -2,41 +2,55 @@ package com.hospitalmanagement.utility;
 
 import com.hospitalmanagement.entities.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.context.annotation.Configuration;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-
 @Component
 public class JWTUtility {
-    private static final String SECRET =
-            "mysecretkeymysecretkeymysecretkey12345";
 
-    private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
+    // 1. Externalized secret - set in application.properties
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.expiration-ms:3600000}") // default: 1 hour
+    private long expirationMs;
+
+    // 2. Declared as SecretKey - no cast needed later
+    private SecretKey key;
+
+    // 3. Initialized after @Value injection
+    @PostConstruct
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
 
     // Generate Token
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", user.getUsername());
+
         return Jwts.builder()
                 .setSubject(user.getUserId())
                 .claims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Extract Username
+    // Extract UserId (subject)
     public String extractUserId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -52,25 +66,39 @@ public class JWTUtility {
         return resolver.apply(claims);
     }
 
-    // Extract All Claims
+    // Extract All Claims - throws JwtException if token is invalid/tampered
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .verifyWith((SecretKey) key)
+                .verifyWith(key)          // No cast needed now
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
     }
 
-    // Check Expired
+    // Check Expiry
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    // Validate Token
+    // 4. Validate token only (used by filter - no userId needed,
+    //    signature verification proves authenticity)
+    public boolean validateToken(String token) {
+        try {
+            extractAllClaims(token); // verifies signature + structure
+            return !isTokenExpired(token);
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;             // malformed, tampered, or expired
+        }
+    }
+
+    // 5. Validate token + match against a known userId
+    //    (use when you want extra binding check)
     public boolean validateToken(String token, String userId) {
-        String extractedUserId = extractUserId(token);
-        return extractedUserId.equals(userId) && !isTokenExpired(token);
+        try {
+            String extractedId = extractUserId(token);
+            return extractedId.equals(userId) && !isTokenExpired(token);
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 }
-
-

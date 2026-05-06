@@ -1,22 +1,57 @@
+#spring:
+#  application:
+#    name: hospitalmanagement
+#
+#  datasource:
+#    url:
+#    username:
+#    password:
+#    driver-class-name: org.postgresql.Driver
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#
+##  security:
+##     user:
+##       name: "abhishek"
+##       password: "Virat@17112002"
+#
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#
+#          google:
+#            client-id:
+#            client-secret:
+#            scope:
+#              - email
+#              - profile
+#
+#          github:
+#            client-id: YOUR_GITHUB_CLIENT_ID
+#            client-secret: YOUR_GITHUB_CLIENT_SECRET
+#            scope:
+#              - user:email
+#              - read:user
+
 spring:
   application:
     name: hospitalmanagement
 
   datasource:
-    url:
-    username:
+    url: jdbc:mysql://localhost:3306/hospitalmanagement
+    username: root
     password:
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
 
-#  security:
-#     user:
-#       name: "abhishek"
-#       password: "Virat@17112002"
 
   security:
     oauth2:

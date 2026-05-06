@@ -1,42 +1,30 @@
-package com.hospitalmanagement.entities;
+package com.hospitalmanagement.dtos.doctordtos;
 
+import com.hospitalmanagement.entities.Appointment;
+import com.hospitalmanagement.entities.Department;
+import com.hospitalmanagement.entities.User;
 import com.hospitalmanagement.enums.BloodGroup;
 import com.hospitalmanagement.enums.Gender;
 import com.hospitalmanagement.enums.Specialization;
-import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-public class Doctor {
-
-    @Id
-    private String doctorId;
+public class GetDoctorResponseDTO {
+    private User user ;
     private String firstName ;
     private String lastName ;
-    @Enumerated(value = EnumType.STRING)
     private Gender gender ;
-    @Enumerated(value = EnumType.STRING)
     private BloodGroup bloodGroup ;
-    @Enumerated(value = EnumType.STRING)
     private Specialization specialization ;
-
-    @OneToMany( mappedBy = "doctor",cascade = CascadeType.ALL)
     private List<Appointment> appointments = new ArrayList<>() ;
-
-    @ManyToMany(mappedBy = "departmentDoctors")
     private List<Department> departments = new ArrayList<>() ;
 
-    @OneToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
-    @MapsId
-    @JoinColumn(name = "user_Id")
-    private User user ;
 
-    public Doctor() {
+    public GetDoctorResponseDTO() {
     }
 
-    public Doctor(String doctorId, String firstName, String lastName, Gender gender, BloodGroup bloodGroup, Specialization specialization, List<Appointment> appointments, List<Department> departments, User user) {
-        this.doctorId = doctorId;
+    public GetDoctorResponseDTO( String firstName, String lastName, Gender gender, BloodGroup bloodGroup, Specialization specialization, List<Appointment> appointments, List<Department> departments, User user) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -47,13 +35,6 @@ public class Doctor {
         this.user = user;
     }
 
-    public String getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(String doctorId) {
-        this.doctorId = doctorId;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -121,8 +102,7 @@ public class Doctor {
 
     @Override
     public String toString() {
-        return "Doctor{" +
-                "doctorId='" + doctorId + '\'' +
+        return "GetDoctorResponseDTO{" +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", gender=" + gender +

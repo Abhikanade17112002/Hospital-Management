@@ -1,106 +1,55 @@
 package com.hospitalmanagement.dtos.userdtos;
-import com.hospitalmanagement.enums.BloodGroup;
-import com.hospitalmanagement.enums.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
-import java.time.LocalDate;
 
 public class UserSignUpRequestDTO {
-
-    @NotBlank( message = "First Name Cannot Be Blank")
-    private String firstName ;
-    @NotBlank(message = "Last Name Cannot Be Blank")
-    private String lastName ;
-    @Email(message = "Email Id Should Be In Valid Format")
-    private String emailId ;
+    @NotBlank(message = "User Name Cannot Be Blank")
+    private String userName  ;
     @NotBlank(message = "Password Cannot Be Blank")
     private String password ;
-    private Gender gender ;
-    private LocalDate dateOfBirth ;
-    private BloodGroup bloodGroup ;
+    @Email(message = "EmailId Cannot Be Blank")
+    private String emailId ;
 
 
     public UserSignUpRequestDTO() {
     }
 
-    public UserSignUpRequestDTO(String firstName, String lastName, String emailId, String password, Gender gender, LocalDate dateOfBirth, BloodGroup bloodGroup) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.emailId = emailId;
+    public UserSignUpRequestDTO(String userName, String password, String emailId) {
+        this.userName = userName;
         this.password = password;
-        this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.bloodGroup = bloodGroup;
-    }
-
-    public  String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(@NotBlank(message = "First Name Cannot Be Blank") String firstName) {
-        this.firstName = firstName;
-    }
-
-    public  String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(@NotBlank(message = "Last Name Cannot Be Blank") String lastName) {
-        this.lastName = lastName;
-    }
-
-    public @Email(message = "Email Id Should Be In Valid Format") String getEmailId() {
-        return emailId;
-    }
-
-    public void setEmailId(@Email(message = "Email Id Should Be In Valid Format") String emailId) {
         this.emailId = emailId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(@NotBlank(message = "Password Cannot Be Blank") String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public Gender getGender() {
-        return gender;
+    public String getEmailId() {
+        return emailId;
     }
 
-    public void setGender(@NotBlank(message = "Gender Cannot Be Blank") Gender gender) {
-        this.gender = gender;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(@NotBlank(message = "Date Of Birth Cannot Be Blank") LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public  BloodGroup getBloodGroup() {
-        return bloodGroup;
-    }
-
-    public void setBloodGroup(@NotBlank(message = "Blood Group Cannot Be Blank") BloodGroup bloodGroup) {
-        this.bloodGroup = bloodGroup;
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
     }
 
     @Override
     public String toString() {
         return "UserSignUpRequestDTO{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", emailId='" + emailId + '\'' +
+                "userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
-                ", gender=" + gender +
-                ", dateOfBirth=" + dateOfBirth +
-                ", bloodGroup=" + bloodGroup +
+                ", emailId='" + emailId + '\'' +
                 '}';
     }
 }

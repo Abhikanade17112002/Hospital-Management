@@ -15,66 +15,52 @@ import java.util.List;
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "unique_patient_email", columnNames = {"emailId"}
-                )
-                ,
-                @UniqueConstraint(
                         name = "unique_patient_entry", columnNames = {"firstName", "lastName", "dateOfBirth"}
                 )
-        }
-        ,
-        indexes = {
-
-                @Index(name = "idex_patient_email",
-                        columnList = "emailId"
-                )
-
         }
 )
 public class Patient {
 
     @Id
-    @GeneratedValue( strategy = GenerationType.UUID)
     private String patientId ;
     private String firstName ;
     private String lastName ;
-    @Column(unique = true)
-    private String emailId ;
     private LocalDate dateOfBirth ;
     @Enumerated( value = EnumType.STRING)
     private Gender gender ;
     @CreationTimestamp
     @Column( updatable = false )
     private LocalDateTime createdAt ;
-    @Column(nullable = false)
     private BloodGroup bloodGroup ;
     @UpdateTimestamp
     private LocalDateTime updatedAt ;
-
     // Owning Side
     @OneToOne( cascade = CascadeType.ALL)
     @JoinColumn( name = "insurance_id")
     private Insurance insurance ;
-
-
     // Inverse Side
     @OneToMany(mappedBy = "patient" , cascade = CascadeType.ALL)
     private List<Appointment> appointments = new ArrayList<>() ;
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @MapsId
+    @JoinColumn(name = "user_Id")
+    private User user ;
 
     public Patient() {
     }
 
-    public Patient(Insurance insurance,String patientId, String firstName, String lastName, String emailId, LocalDate dateOfBirth, Gender gender, LocalDateTime createdAt, BloodGroup bloodGroup, LocalDateTime updatedAt) {
+    public Patient(String patientId, String firstName, String lastName, LocalDate dateOfBirth, Gender gender, LocalDateTime createdAt, BloodGroup bloodGroup, LocalDateTime updatedAt, Insurance insurance, List<Appointment> appointments, User user) {
         this.patientId = patientId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.emailId = emailId;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.createdAt = createdAt;
         this.bloodGroup = bloodGroup;
         this.updatedAt = updatedAt;
-        this.insurance = insurance ;
+        this.insurance = insurance;
+        this.appointments = appointments;
+        this.user = user;
     }
 
     public Insurance getInsurance() {
@@ -107,14 +93,6 @@ public class Patient {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getEmailId() {
-        return emailId;
-    }
-
-    public void setEmailId(String emailId) {
-        this.emailId = emailId;
     }
 
     public LocalDate getDateOfBirth() {
@@ -165,19 +143,28 @@ public class Patient {
         this.appointments = appointments;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Patient{" +
                 "patientId='" + patientId + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", emailId='" + emailId + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", gender=" + gender +
                 ", createdAt=" + createdAt +
                 ", bloodGroup=" + bloodGroup +
                 ", updatedAt=" + updatedAt +
                 ", insurance=" + insurance +
+                ", appointments=" + appointments +
+                ", user=" + user +
                 '}';
     }
 }

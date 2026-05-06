@@ -13,9 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
-import java.net.http.HttpHeaders;
 
 @Component
 public class JWTAuthFilter extends OncePerRequestFilter {
@@ -30,11 +28,13 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
            String authHeader =  request.getHeader("Authorization") ;
-           if( authHeader == null || authHeader.startsWith("Bearer")){
-               filterChain.doFilter(request,response);
-           }
-           else{
-               String jwtToken = authHeader.split("Bearer ")[1] ;
+        System.out.println(authHeader);
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+            String jwtToken = authHeader.substring(7); // remove "Bearer "
                System.out.println("JWT Token ==> " + jwtToken );
                String userId = jwtUtility.extractUserId(jwtToken);
                User retrivedUser =  userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException()) ;
@@ -42,12 +42,16 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
                if( retrivedUser != null && SecurityContextHolder.getContext().getAuthentication() == null ){
 
-                   UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(retrivedUser,null,null);
+                   System.out.println("INSIDE");
+
+                   UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(retrivedUser,null,retrivedUser.getAuthorities());
+                   System.out.println(usernamePasswordAuthenticationToken);
                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
                }
 
                filterChain.doFilter(request,response);
 
-           }
+
     }
 }

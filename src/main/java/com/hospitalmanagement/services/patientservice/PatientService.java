@@ -22,4 +22,5 @@ public interface PatientService {
     List<GetPatientResponseDTO> getRegisteredPatientBornAfterNative(LocalDate bornAfter);
     List<Object[]> getGenderPatientCount();
     List<GetPatientResponseDTO> getPagablePatients(int pageNo, int noOfRecords, String sortBy);
+    String deleteRegisteredPatientById(String patientId);
 }
