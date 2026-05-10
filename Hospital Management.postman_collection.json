@@ -1,0 +1,1662 @@
+{
+  "info": {
+    "_postman_id": "69c22999-8056-4ed0-9c46-80fc3325e4c9",
+    "name": "Hospital Management",
+    "description": "## Hospital Management API\n\nThis collection provides a comprehensive set of API endpoints for managing core hospital operations. It is designed to support the day-to-day workflows of healthcare facilities by enabling structured access to patient, staff, and administrative data.\n\n### What's Covered\n- **Patient Management** – Register, retrieve, update, and discharge patient records\n- **Doctor & Staff Management** – Manage doctor profiles, specializations, and availability\n- **Appointments** – Schedule, reschedule, and cancel patient appointments\n- **Medical Records** – Access and update diagnoses, prescriptions, and treatment history\n- **Billing & Invoicing** – Generate and manage patient bills and payment records\n- **Ward & Bed Management** – Track bed availability and patient admissions\n\n### Usage\nUse this collection to test and integrate with the Hospital Management System backend. Ensure the appropriate environment is selected before sending requests, as base URLs and authentication tokens are managed via environment variables.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53246313",
+    "_collection_link": "https://go.postman.co/collection/53246313-69c22999-8056-4ed0-9c46-80fc3325e4c9?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Patient",
+      "item": [
+        {
+          "name": "Add Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"Rohit\",\r\n    \"lastName\": \"Verma\",\r\n    \"emailId\": \"rohit.verma@gmail.com\",\r\n    \"dateOfBirth\": \"1997-12-25\",\r\n    \"gender\": \"MALE\",\r\n    \"bloodGroup\": \"B_POSITIVE\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/patients/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "patients",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Patient Profile By Id",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vault:json-web-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "  {\r\n    \"firstName\": \"Omkar\",\r\n    \"lastName\": \"Chavan\",\r\n    \"dateOfBirth\": \"2001-07-25\",\r\n    \"gender\": \"MALE\",\r\n\t\"bloodGroup\":\"AB_NEGATIVE\"\r\n}\r\n  ",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/patients/{{patientId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "patients",
+                "{{patientId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "findByFirstNameContainingOrderByFirstNameAsc",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "  {\r\n    \"firstName\": \"Rahul\",\r\n    \"lastName\": \"Sharma\",\r\n    \"emailId\": \"rahul.sharma@gmail.com\",\r\n    \"dateOfBirth\": \"1990-05-15\",\r\n    \"gender\": \"MALE\"\r\n}\r\n  "
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/patients/767449a9-6852-49e7-b7b1-f8e78a2bd6c5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "patients",
+                "767449a9-6852-49e7-b7b1-f8e78a2bd6c5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "datesbetween",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"startDate\" : \"1980-01-01\" ,\r\n    \"endDate\" : \"1990-12-31\" \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/patients/datesbetween?startDate=1990-01-01&endDate=2005-01-01",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "patients",
+                "datesbetween"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "1990-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2005-01-01"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "BornAfter",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"bornAfter\" : \"1980-01-01\" \r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/patients/bornafter?bornAfter=2000-01-01",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "patients",
+                "bornafter"
+              ],
+              "query": [
+                {
+                  "key": "bornAfter",
+                  "value": "2000-01-01"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "BornAfter Native Query",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"bornAfter\" : \"1980-01-01\" \r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/patients/bornafter?bornAfter=2000-01-01",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "patients",
+                "bornafter"
+              ],
+              "query": [
+                {
+                  "key": "bornAfter",
+                  "value": "2000-01-01"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "genderpatientcount",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getpagablepatients",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/patients/getpagablepatients?pageno=0&noofrecords=3&sortBy=firstName",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "patients",
+                "getpagablepatients"
+              ],
+              "query": [
+                {
+                  "key": "pageno",
+                  "value": "0"
+                },
+                {
+                  "key": "noofrecords",
+                  "value": "3"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "firstName"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Patient By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/patients/{{patientId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "patients",
+                "{{patientId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Insurance To Patient With Id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vault:json-web-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"policyNumber\": \"POL100010\",\n    \"provider\": \"Oriental Insurance\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/insurance/addinsurance/{{patientId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "insurance",
+                "addinsurance",
+                "{{patientId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Patient Associated Insurance",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vault:json-web-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"policyNumber\": \"POL100010\",\n    \"provider\": \"Oriental Insurance\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/insurance/removeinsurance/{{patientId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "insurance",
+                "removeinsurance",
+                "{{patientId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Doctor For Appointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vault:json-web-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointmentTime\": \"2026-05-20T16:45:00\",\n  \"reason\": \"Irregular heartbeat consultation\",\n  \"patientId\": \"19e2e777-9473-4621-afb5-7e2199487fbf\",\n  \"doctorId\": \"447adf7e-d0a1-4dab-8e26-7c2607eb163c\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/patients/{{patientId}}/requestappointment",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "patients",
+                "{{patientId}}",
+                "requestappointment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Patient Appointments By Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vault:json-web-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointmentTime\": \"2026-05-20T16:45:00\",\n  \"reason\": \"Irregular heartbeat consultation\",\n  \"patientId\": \"19e2e777-9473-4621-afb5-7e2199487fbf\",\n  \"doctorId\": \"447adf7e-d0a1-4dab-8e26-7c2607eb163c\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/patients/{{patientId}}/appointments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "patients",
+                "{{patientId}}",
+                "appointments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Patient Appointment By Id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vault:json-web-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointmentTime\": \"2026-05-20T16:45:00\",\n  \"reason\": \"Irregular heartbeat consultation\",\n  \"patientId\": \"19e2e777-9473-4621-afb5-7e2199487fbf\",\n  \"doctorId\": \"447adf7e-d0a1-4dab-8e26-7c2607eb163c\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/patients/{{patientId}}/deleteappointment/{{appointmentId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "patients",
+                "{{patientId}}",
+                "deleteappointment",
+                "{{appointmentId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Insurance",
+      "item": [
+        {
+          "name": "Add Insurance To Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "  {\r\n    \"policyNumber\": \"BAJAJ-ALLIANZ-554433\",\r\n    \"provider\": \"Bajaj Allianz\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/insurance/addinsurance/cc46e74b-1418-4282-b8cd-e29f7da64e89",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "insurance",
+                "addinsurance",
+                "cc46e74b-1418-4282-b8cd-e29f7da64e89"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Appointment",
+      "item": [
+        {
+          "name": "New Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"appointmentTime\": \"2026-04-24T15:45:00\",\r\n    \"reason\": \"General weakness and fatigue\",\r\n    \"patientId\": \"cdf86cf2-078e-4430-b3c2-9902584abeaf\",\r\n    \"doctorId\": \"8067cd86-6e84-4cf2-83d3-947794e1c54f\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/appointments/addappointment",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "appointments",
+                "addappointment"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "User Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"userName\": \"rohan@123\",\r\n  \"password\": \"Pass@123\",\r\n  \"emailId\": \"rohan.kanade@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/user/signup",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "user",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Sign Out",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userName\":\"abhikanade301\",\n    \"password\":\"Pass@123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/user/signout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "user",
+                "signout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Sign In",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userName\":\"rohan@123\",\n    \"password\":\"Pass@123\"\n}\n// {\n//     \"userName\":\"Yash@123\",\n//     \"password\":\"Pass@123\"\n// }\n// {\n//     \"userName\": \"abhikanade301\",\n//     \"password\": \"Pass@123\"\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/user/signin",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "user",
+                "signin"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Users",
+          "item": [
+            {
+              "name": "Get All Registered Users",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/users/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "users",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get User With Id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/users/74cd3e50-7406-4cd1-bf7a-13ea607e2122",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "users",
+                    "74cd3e50-7406-4cd1-bf7a-13ea607e2122"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete User",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/users/35b55ebc-e7c4-4d46-9ba1-ff8ba2e69719",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "users",
+                    "35b55ebc-e7c4-4d46-9ba1-ff8ba2e69719"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Toggle User Profile Status",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/users/c83a16e4-0c51-4e40-9c82-0c74c5a2f413/togglestatus",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "users",
+                    "c83a16e4-0c51-4e40-9c82-0c74c5a2f413",
+                    "togglestatus"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Doctor",
+          "item": [
+            {
+              "name": "Get All Registered Doctors",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/doctors/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "doctors",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Registered Doctor By Id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/doctors/qrdfsdfsdfsdfwerwerwerwerwerwerwer",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "doctors",
+                    "qrdfsdfsdfsdfwerwerwerwerwerwerwer"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Doctor By Id",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/doctors/qrdfsdfsdfsdfwerwerwerwerwerwerwer",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "doctors",
+                    "qrdfsdfsdfsdfwerwerwerwerwerwerwer"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Onboard A Doctor",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/doctors/onboard/{{doctorId}}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "doctors",
+                    "onboard",
+                    "{{doctorId}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Patient",
+          "item": [
+            {
+              "name": "Get All Registered Patients",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/patients/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "patients",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Registered Patient By Id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/patients/{{patientId}}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "patients",
+                    "{{patientId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Patient By Id",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/patients/qrdfsdfsdfsdfwerwerwerwerwerwerwer",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "patients",
+                    "qrdfsdfsdfsdfwerwerwerwerwerwerwer"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Onboard A Patient",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/patients/onboard/{{patientId}}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "patients",
+                    "onboard",
+                    "{{patientId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Appointment",
+          "item": [
+            {
+              "name": "Get All Appointments",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/appointments/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "appointments",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Appointment By Id",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/appointments/{{appointmentId}}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "appointments",
+                    "{{appointmentId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/appointments/{{appointmentId}}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "appointments",
+                    "{{appointmentId}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Department",
+          "item": [
+            {
+              "name": "Add New Department",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"department\" : \"MEDICAL_RECORDS\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/departments/adddepartment",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "departments",
+                    "adddepartment"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Departments",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/departments/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "departments",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign department head doctor",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"departmentId\" : \"58907eeb-fbb0-4e93-8a20-0bd0c481767b\" ,\r\n    \"doctorId\" : \"012ba294-2197-4036-918e-704e12dbdfeb\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/departments/assigndepartmentheaddoctor",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "departments",
+                    "assigndepartmentheaddoctor"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Add Doctor To Department",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"departmentId\" :\"2a88f49a-2120-4957-95d6-243b17c9fa1f\",\r\n    \"doctorIds\": [\"d95f9b35-10c5-405d-915f-b18544c27455\"]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/departments/adddepartmentdoctors",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "departments",
+                    "adddepartmentdoctors"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Remove Doctor From Department",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"departmentId\" :\"2a88f49a-2120-4957-95d6-243b17c9fa1f\",\r\n    \"doctorIds\": [\"96f24ea6-fece-4812-9d77-bffd9f8a058b\"]\r\n}\r\n\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/departments/removedepartmentdoctors",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "departments",
+                    "removedepartmentdoctors"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Roles And Permisions",
+          "item": [
+            {
+              "name": "Get All Roles And Permissions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/rolesandpermissions/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "rolesandpermissions",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Role And Permissons By ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/admins/rolesandpermissions/{{roleId}}",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "admins",
+                    "rolesandpermissions",
+                    "{{roleId}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Insurance",
+          "item": [
+            {
+              "name": "Create New Insurance",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"policyNumber\": \"POL100010\",\n    \"provider\": \"Oriental Insurance\"\n  }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/insurance/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "insurance",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Insurance",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{vault:json-web-token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"policyNumber\": \"POL100010\",\n    \"provider\": \"Oriental Insurance\"\n  }"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/api/v1/insurance/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "v1",
+                    "insurance",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Doctor",
+      "item": [
+        {
+          "name": "Update Doctor Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vault:json-web-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"firstName\": \"Rohan\",\r\n  \"lastName\": \"Kanade\",\r\n  \"gender\": \"MALE\",\r\n  \"bloodGroup\": \"O_POSITIVE\",\r\n  \"dateOfBirth\": \"1995-08-15\",\r\n  \"specialization\": \"CARDIOLOGY\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/doctors/{{doctorId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "doctors",
+                "{{doctorId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Doctor By Id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vault:json-web-token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/doctors/{{doctorId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "doctors",
+                "{{doctorId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Doctor Appointments By Id Copy",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vault:json-web-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointmentTime\": \"2026-05-20T16:45:00\",\n  \"reason\": \"Irregular heartbeat consultation\",\n  \"patientId\": \"19e2e777-9473-4621-afb5-7e2199487fbf\",\n  \"doctorId\": \"447adf7e-d0a1-4dab-8e26-7c2607eb163c\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/doctors/{{doctorId}}/appointments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "doctors",
+                "{{doctorId}}",
+                "appointments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Doctor Appointment By Id Copy",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vault:json-web-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointmentTime\": \"2026-05-20T16:45:00\",\n  \"reason\": \"Irregular heartbeat consultation\",\n  \"patientId\": \"19e2e777-9473-4621-afb5-7e2199487fbf\",\n  \"doctorId\": \"447adf7e-d0a1-4dab-8e26-7c2607eb163c\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/doctors/{{doctorId}}/deleteappointment/{{appointmentId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "doctors",
+                "{{doctorId}}",
+                "deleteappointment",
+                "{{appointmentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Appointment Status By Id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vault:json-web-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"appointmentStatus\":\"RESCHEDULED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/doctors/{{doctorId}}/updateappointment/{{appointmentId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "doctors",
+                "{{doctorId}}",
+                "updateappointment",
+                "{{appointmentId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
