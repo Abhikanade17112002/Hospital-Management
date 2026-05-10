@@ -1,6 +1,7 @@
 package com.hospitalmanagement.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hospitalmanagement.enums.AppointmentStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -22,19 +23,24 @@ public class Appointment {
     private Patient patient ;
 
 
-    @JoinColumn( name = "doctor_name" , nullable = false)
+    @JoinColumn( name = "doctor_id" , nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private Doctor doctor ;
 
+    @Enumerated
+    private AppointmentStatus appointmentStatus ;
+
     public Appointment() {
     }
 
-    public Appointment(String appointmentId, LocalDateTime appointmentTime, String reason, Patient patient) {
+    public Appointment(String appointmentId, LocalDateTime appointmentTime, String reason, Patient patient, Doctor doctor, AppointmentStatus appointmentStatus) {
         this.appointmentId = appointmentId;
         this.appointmentTime = appointmentTime;
         this.reason = reason;
         this.patient = patient;
+        this.doctor = doctor;
+        this.appointmentStatus = appointmentStatus;
     }
 
     public Appointment(String appointmentId) {
@@ -81,6 +87,14 @@ public class Appointment {
         this.doctor = doctor;
     }
 
+    public AppointmentStatus getAppointmentStatus() {
+        return appointmentStatus;
+    }
+
+    public void setAppointmentStatus(AppointmentStatus appointmentStatus) {
+        this.appointmentStatus = appointmentStatus;
+    }
+
     @Override
     public String toString() {
         return "Appointment{" +
@@ -89,6 +103,7 @@ public class Appointment {
                 ", reason='" + reason + '\'' +
                 ", patient=" + patient +
                 ", doctor=" + doctor +
+                ", appointmentStatus=" + appointmentStatus +
                 '}';
     }
 }

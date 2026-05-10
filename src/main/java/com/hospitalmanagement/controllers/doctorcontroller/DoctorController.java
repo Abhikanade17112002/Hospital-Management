@@ -1,6 +1,7 @@
 package com.hospitalmanagement.controllers.doctorcontroller;
 
 import com.hospitalmanagement.dtos.appointmentdtos.GetAppointmentResponseDTO;
+import com.hospitalmanagement.dtos.appointmentdtos.UpdateAppointmentStatus;
 import com.hospitalmanagement.dtos.doctordtos.GetDoctorResponseDTO;
 import com.hospitalmanagement.dtos.doctordtos.UpdateDoctorProfileRequestDTO;
 import com.hospitalmanagement.dtos.patientdtos.GetPatientResponseDTO;
@@ -37,6 +38,13 @@ public class DoctorController {
     public ResponseEntity<GetDoctorResponseDTO> updateDoctorProfile(@PathVariable(name = "doctorId") String doctorId, @RequestBody UpdateDoctorProfileRequestDTO updateDoctorProfileRequestDTO){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(doctorService.updateDoctorProfile(doctorId,updateDoctorProfileRequestDTO));
+    }
+
+    @PutMapping("/{doctorId}/updateappointment/{appointmentId}")
+    @PreAuthorize("hasRole('ROLE_DOCTOR') and (#doctorId == authentication.principal.userId)")
+    public ResponseEntity<GetDoctorResponseDTO> updateAppointmentStatusById(@PathVariable(name = "doctorId") String doctorId,@PathVariable(name = "appointmentId") String appointmentId, @RequestBody UpdateAppointmentStatus updateAppointmentStatus){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(doctorService.updateAppointmentStatusById(doctorId,appointmentId,updateAppointmentStatus));
     }
 
     @GetMapping("/{doctorId}/appointments")

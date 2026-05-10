@@ -2,6 +2,7 @@ package com.hospitalmanagement.services.doctorservices;
 
 
 import com.hospitalmanagement.dtos.appointmentdtos.GetAppointmentResponseDTO;
+import com.hospitalmanagement.dtos.appointmentdtos.UpdateAppointmentStatus;
 import com.hospitalmanagement.dtos.doctordtos.AddDoctorRequestDTO;
 import com.hospitalmanagement.dtos.doctordtos.AddDoctorResponseDTO;
 import com.hospitalmanagement.dtos.doctordtos.GetDoctorResponseDTO;
@@ -139,5 +140,13 @@ public class DoctorService {
 
         appointmentRepository.deleteById(appointmentId);
         return modelMapper.map(doctor, GetDoctorResponseDTO.class);
+    }
+
+    public GetDoctorResponseDTO updateAppointmentStatusById(String doctorId, String appointmentId, UpdateAppointmentStatus updateAppointmentStatus) {
+
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(()-> new EntityNotFoundException("Appointment With Appointment Id " + appointmentId + " Not Found"));
+        appointment.setAppointmentStatus(updateAppointmentStatus.getAppointmentStatus());
+        appointmentRepository.save(appointment);
+       return modelMapper.map(doctorRepository.findById(doctorId),GetDoctorResponseDTO.class) ;
     }
 }

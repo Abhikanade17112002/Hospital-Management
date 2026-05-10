@@ -7,6 +7,7 @@ import com.hospitalmanagement.entities.Appointment;
 import com.hospitalmanagement.entities.Doctor;
 import com.hospitalmanagement.entities.Patient;
 import com.hospitalmanagement.entities.User;
+import com.hospitalmanagement.enums.AppointmentStatus;
 import com.hospitalmanagement.repositories.AppointmentRepository;
 import com.hospitalmanagement.repositories.DoctorRepository;
 import com.hospitalmanagement.repositories.UserRepository;
@@ -177,7 +178,6 @@ public class PatientServiceImp implements PatientService {
 
     @Override
     public GetAppointmentResponseDTO requestDoctorAppointment(AddAppointmentRequestDTO addAppointmentRequestDTO) {
-        System.out.println("ppppppp");
         Patient patient = patientRepository.findById(addAppointmentRequestDTO.getPatientId()).orElseThrow(()->new EntityNotFoundException("Patient With Id " + addAppointmentRequestDTO.getPatientId() + " Not Found"));
         Doctor doctor = doctorRepository.findById(addAppointmentRequestDTO.getDoctorId()).orElseThrow(()->new EntityNotFoundException("Doctor With Id " + addAppointmentRequestDTO.getDoctorId() + " Not Found"));
         Appointment appointment = new Appointment() ;
@@ -185,6 +185,7 @@ public class PatientServiceImp implements PatientService {
         appointment.setPatient(patient);
         appointment.setAppointmentTime(addAppointmentRequestDTO.getAppointmentTime());
         appointment.setReason(addAppointmentRequestDTO.getReason());
+        appointment.setAppointmentStatus(AppointmentStatus.PENDING);
 
         doctor.getAppointments().add(appointment);
         patient.getAppointments().add(appointment);
