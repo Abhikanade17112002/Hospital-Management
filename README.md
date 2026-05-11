@@ -111,6 +111,8 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
+![ER Diagram](./docs/hospital_management_erd.png)
+
 ## 📋 API Reference
 
 ### 👤 Patient
