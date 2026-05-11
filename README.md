@@ -111,7 +111,7 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-![ER Diagram](./docs/hospital_management_erd.png)
+![ER Diagram](https://github.com/Abhikanade17112002/Hospital-Management/blob/main/src/main/resources/static/Hospital_Management_ER_Diagramme.png)
 
 ## 📋 API Reference
 
