@@ -8,6 +8,7 @@ import com.hospitalmanagement.dtos.doctordtos.AddDoctorResponseDTO;
 import com.hospitalmanagement.dtos.doctordtos.GetDoctorResponseDTO;
 import com.hospitalmanagement.dtos.doctordtos.UpdateDoctorProfileRequestDTO;
 import com.hospitalmanagement.entities.*;
+import com.hospitalmanagement.enums.AppointmentStatus;
 import com.hospitalmanagement.enums.RoleType;
 import com.hospitalmanagement.repositories.AppointmentRepository;
 import com.hospitalmanagement.repositories.DoctorRepository;
@@ -148,5 +149,10 @@ public class DoctorService {
         appointment.setAppointmentStatus(updateAppointmentStatus.getAppointmentStatus());
         appointmentRepository.save(appointment);
        return modelMapper.map(doctorRepository.findById(doctorId),GetDoctorResponseDTO.class) ;
+    }
+
+    public List<GetAppointmentResponseDTO> getDoctorAppointmentsByStatus(String doctorId, AppointmentStatus appointmentStatus) {
+        List<Appointment> appointments = appointmentRepository.findAllByAppointmentStatus(appointmentStatus);
+        return appointments.stream().map((appointment)-> modelMapper.map(appointment, GetAppointmentResponseDTO.class)).collect(Collectors.toList());
     }
 }

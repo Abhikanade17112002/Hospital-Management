@@ -3,6 +3,7 @@ package com.hospitalmanagement.services.patientservice;
 import com.hospitalmanagement.dtos.appointmentdtos.AddAppointmentRequestDTO;
 import com.hospitalmanagement.dtos.appointmentdtos.GetAppointmentResponseDTO;
 import com.hospitalmanagement.dtos.patientdtos.*;
+import com.hospitalmanagement.enums.AppointmentStatus;
 import jakarta.validation.Valid;
 import org.jspecify.annotations.Nullable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,4 +27,5 @@ public interface PatientService {
     GetAppointmentResponseDTO requestDoctorAppointment(AddAppointmentRequestDTO addAppointmentRequestDTO);
     List<GetAppointmentResponseDTO> getPatientAppointments(String patientId);
     GetPatientResponseDTO deletePatientAppointmentById(String patientId, String appointmentId);
+    List<GetAppointmentResponseDTO> getPatientAppointmentsByStatus(String patientId, AppointmentStatus appointmentStatus);
 }

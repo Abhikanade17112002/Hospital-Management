@@ -6,6 +6,7 @@ import com.hospitalmanagement.dtos.appointmentdtos.GetAppointmentResponseDTO;
 import com.hospitalmanagement.dtos.patientdtos.AddPatientRequestDTO;
 import com.hospitalmanagement.dtos.patientdtos.GetPatientResponseDTO;
 import com.hospitalmanagement.dtos.patientdtos.UpdatePatientProfileRequestDTO;
+import com.hospitalmanagement.enums.AppointmentStatus;
 import com.hospitalmanagement.services.patientservice.PatientService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -163,6 +164,18 @@ public class PatientController {
                 )
                 .body(
                         patientService.getPatientAppointments(patientId)
+                );
+
+    }
+
+    @GetMapping("/{patientId}/appointmentsbystatus/{appointmentStatus}")
+    @PreAuthorize("hasRole('ROLE_PATIENT') and #patientId == authentication.principal.userId")
+    public ResponseEntity<List<GetAppointmentResponseDTO>> getPatientAppointmentsByStatus(@PathVariable(name = "patientId") String patientId,@PathVariable(name = "appointmentStatus") AppointmentStatus appointmentStatus ) {
+        return ResponseEntity.status(
+                        HttpStatus.OK
+                )
+                .body(
+                        patientService.getPatientAppointmentsByStatus(patientId,appointmentStatus)
                 );
 
     }

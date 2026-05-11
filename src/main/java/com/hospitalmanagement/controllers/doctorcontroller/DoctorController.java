@@ -4,9 +4,8 @@ import com.hospitalmanagement.dtos.appointmentdtos.GetAppointmentResponseDTO;
 import com.hospitalmanagement.dtos.appointmentdtos.UpdateAppointmentStatus;
 import com.hospitalmanagement.dtos.doctordtos.GetDoctorResponseDTO;
 import com.hospitalmanagement.dtos.doctordtos.UpdateDoctorProfileRequestDTO;
-import com.hospitalmanagement.dtos.patientdtos.GetPatientResponseDTO;
+import com.hospitalmanagement.enums.AppointmentStatus;
 import com.hospitalmanagement.services.doctorservices.DoctorService;
-import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,6 +66,17 @@ public class DoctorController {
                 )
                 .body(
                         doctorService.deleteDoctorAppointmentById(doctorId,appointmentId)
+                );
+
+    }
+    @GetMapping("/{doctorId}/appointmentsbystatus/{appointmentStatus}")
+    @PreAuthorize("hasRole('ROLE_DOCTOR') and #doctorId == authentication.principal.userId")
+    public ResponseEntity<List<GetAppointmentResponseDTO>> getDoctorAppointmentsByStatus(@PathVariable(name = "doctorId") String doctorId,@PathVariable(name = "appointmentStatus") AppointmentStatus appointmentStatus ) {
+        return ResponseEntity.status(
+                        HttpStatus.OK
+                )
+                .body(
+                        doctorService.getDoctorAppointmentsByStatus(doctorId,appointmentStatus)
                 );
 
     }

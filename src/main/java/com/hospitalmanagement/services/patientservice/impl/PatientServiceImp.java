@@ -216,4 +216,10 @@ public class PatientServiceImp implements PatientService {
         appointmentRepository.deleteById(appointmentId);
         return modelMapper.map(patient, GetPatientResponseDTO.class);
     }
+
+    @Override
+    public List<GetAppointmentResponseDTO> getPatientAppointmentsByStatus(String patientId, AppointmentStatus appointmentStatus) {
+        List<Appointment> appointments = appointmentRepository.findAllByAppointmentStatus(appointmentStatus);
+        return appointments.stream().map((appointment)-> modelMapper.map(appointment, GetAppointmentResponseDTO.class)).collect(Collectors.toList());
+    }
 }
