@@ -111,7 +111,7 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-![ER Diagram](https://github.com/Abhikanade17112002/Hospital-Management/blob/main/src/main/resources/static/Hospital_Management_ER_Diagramme.png)
+![Swagger Apis](http://localhost:8080/swagger-ui/index.html)
 
 ## 📋 API Reference
 
