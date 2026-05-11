@@ -110,9 +110,6 @@ Authorization: Bearer <your_jwt_token>
 ```
 
 ---
-
-![Swagger Apis](http://localhost:8080/swagger-ui/index.html)
-
 ## 📋 API Reference
 
 ### 👤 Patient
